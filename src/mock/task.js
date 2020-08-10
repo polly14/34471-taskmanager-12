@@ -37,7 +37,7 @@ const generateDate = () => {
 
   currentDate.setDate(currentDate.getDate() + daysGap);
 
-  return new Date(currentDate);
+  return currentDate;
 };
 
 const generateRepeating = () => {
@@ -60,7 +60,7 @@ const getRandomColor = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = dueDate === null
+  const repeating = dueDate
     ? generateRepeating()
     : {
       mo: false,
