@@ -1,5 +1,5 @@
 import {COLORS} from "../const.js";
-import {getRandomInteger} from "../utils.js";
+import {getRandomInteger} from "../utils/common.js";
 
 const generateDescription = () => {
   const descriptions = [
@@ -37,7 +37,7 @@ const generateDate = () => {
 
   currentDate.setDate(currentDate.getDate() + daysGap);
 
-  return currentDate;
+  return new Date(currentDate);
 };
 
 const generateRepeating = () => {
@@ -60,7 +60,7 @@ const getRandomColor = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = dueDate
+  const repeating = dueDate === null
     ? generateRepeating()
     : {
       mo: false,
