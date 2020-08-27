@@ -1,4 +1,5 @@
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task.js";
 
 const createTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
@@ -6,18 +7,23 @@ const createTaskTemplate = (task) => {
   const date = dueDate !== null
     ? humanizeTaskDueDate(dueDate)
     : ``;
+
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
+
   const repeatClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
+
   const archiveClassName = isArchive
     ? `card__btn--archive card__btn--disabled`
     : `card__btn--archive`;
+
   const favoriteClassName = isFavorite
     ? `card__btn--favorites card__btn--disabled`
     : `card__btn--favorites`;
+
   return `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
     <div class="card__form">
       <div class="card__inner">
@@ -59,26 +65,25 @@ const createTaskTemplate = (task) => {
   </article>`;
 };
 
-export default class Task {
+export default class Task extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
 
-    this._element = null;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._editClickHandler);
   }
 }
